@@ -1,24 +1,43 @@
 from cuentabancaria import CuentaBancaria
 
 class Usuario:
-    def __init__(self, nombre, cuenta):
+    def __init__(self, nombre):
         self.nombre = nombre
-        self.cuenta = cuenta
+        self.cuentas = {}
 
-    def hacer_deposito(self, amount):
-        self.cuenta.deposito(amount)
+    def agregar_cuenta(self, tipo_cuenta, tasa_interes):
+        self.cuentas[tipo_cuenta] = CuentaBancaria(tasa_interes)
+
+    def hacer_deposito(self, monto, tipo_cuenta):
+        if tipo_cuenta in self.cuentas:
+            self.cuentas[tipo_cuenta].deposito(monto)
+        else:
+            print("Tipo de cuenta inválido")
         return self
 
-    def hacer_retiro(self, amount):
-        self.cuenta.retiro(amount)
+    def hacer_retiro(self, monto, tipo_cuenta):
+        if tipo_cuenta in self.cuentas:
+            self.cuentas[tipo_cuenta].retiro(monto)
+        else:
+            print("Tipo de cuenta inválido")
         return self
 
     def mostrar_balance_usuario(self):
-        print(f"Balance del usuario {self.nombre}:")
-        self.cuenta.mostrar_info_cuenta()
+        for tipo_cuenta, cuenta in self.cuentas.items():
+            balance = cuenta.mostrar_info_cuenta()
+            print(f"{self.nombre}, {tipo_cuenta} balance: {balance}")
         return self
 
 
-cuenta1 = CuentaBancaria(0.02)
-usuario1 = Usuario("John Doe", cuenta1)
-usuario1.hacer_deposito(100).hacer_deposito(200).hacer_retiro(50).mostrar_balance_usuario()
+usuario = Usuario("John Doe")
+
+usuario.agregar_cuenta("checking", 0.02)
+usuario.agregar_cuenta("savings", 0.03)
+
+usuario.hacer_deposito(100, "checking")
+usuario.hacer_deposito(200, "checking")
+usuario.hacer_retiro(150, "checking")
+usuario.hacer_deposito(500, "savings")
+usuario.hacer_retiro(100, "savings")
+
+usuario.mostrar_balance_usuario()
