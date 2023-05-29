@@ -25,6 +25,9 @@ class CuentaBancaria:
             self.balance += interes_generado
         return self
     
+    def imprimir_todas_las_cuentas(cls):
+        for cuenta in cls.cuentas:
+            cuenta.mostrar_info_cuenta()
     
 CuentaBancaria.imprimir_todas_las_cuentas() 
 
